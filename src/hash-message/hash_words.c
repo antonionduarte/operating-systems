@@ -19,12 +19,13 @@ void usage (const char *prog) {
 unsigned long hashf (const char *str) {
 	unsigned long hash = 0;
 	for (int i = 0;  str[i] != '\0';  i++) {
-			hash = (hash << (64-NROT)) | (hash >> NROT) | ((unsigned long)str[i] << (64-8));
+		hash = (hash << (64-NROT)) | (hash >> NROT) | ((unsigned long)str[i] << (64-8));
 	}
 	return hash;
 }
 
 void hash_and_print_words (void) {
+	FILE* fd = stdin;  // By default will read from stdin
 	//----------------------------------------
 	// Do your stuff here
 	//
@@ -36,7 +37,7 @@ void hash_and_print_words (void) {
 int main (int argc, char *argv[]) {
 	// Check there is one and only one argument
 	if (argc != 1) {
-			usage (argv[0]);
+		usage (argv[0]);
 	}
 
 	hash_and_print_words ();
