@@ -18,6 +18,19 @@ int main (int argc, char *argv[]) {
         usage (argv[0]);
     }
 
+    int pid = fork();
+
+    switch (pid) {
+      case -1: // error
+        perror("fork");
+        exit(1);
+        break;
+      case 0: // child process
+        // execv -> hash_words
+      default: // parent process
+        // execv -> execute split_words
+    }
+
     //----------------------------------------
     // Do your stuff here
     //
