@@ -32,9 +32,8 @@ void split_print_words (const char *filename) {
 			while (word != NULL) {
 				printf("%s\n", word);
         word = strtok(NULL, " \t\n");
+        fflush(stdout);
 			}
-
-      fflush(stdout);
 		}
 
 		//----------------------------------------
