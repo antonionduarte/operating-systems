@@ -9,47 +9,41 @@
 
 void usage (const char *prog) {
   printf ("Usages: %s [file_path]\n", prog);
-      exit (1);
+    exit (1);
 }
 
 int main (int argc, char *argv[]) {
   // Check there is one and only one argument
   if (argc < 1 || argc > 2) {
-      usage (argv[0]);
+    usage (argv[0]);
   }
 
   int pid = fork(); // fork of parent process
   int fd[2]; // array with read and write extremities of pipe
   pipe(fd); // create the communication pipe
-
+  
   switch (pid) {
     case -1: // error
       perror("fork");
       exit(1);
       break;
     case 0: // child process (executes hash_words)
-      close(stdin);
+      close(0);
       dup(fd[0]);
-      close(fd[1]);
       close(fd[0]);
-      execv("hash_words", NULL);
+      close(fd[1]);
+      char* args[] = {"./hash_words", NULL};
+      execv("./hash_words", args);
       break;
     default: // parent process (executes split_words)
-      close(stdout);
+      close(1);
       dup(fd[1]);
       close(fd[1]);
       close(fd[0]);
-      execv("split_words", argv);
+      char* args2[] = {"./split_words", argv[1], NULL};
+      execv("./split_words", args2);
       break;
   }
 
-  //----------------------------------------
-  // Do your stuff here
-  //
-  // create pipe, fork and redirect I/O to/from pipe,
-  // parent execs one of "split_words" or "hash_words" 
-  // and the child execs the other one
-  //----------------------------------------
-  
   exit (0);
 }

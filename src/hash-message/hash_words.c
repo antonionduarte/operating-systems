@@ -25,13 +25,16 @@ unsigned long hashf (const char *str) {
 }
 
 void hash_and_print_words (void) {
-	FILE* fd = stdin;  // By default will read from stdin
-	//----------------------------------------
-	// Do your stuff here
-	//
-	// Get words from stdin, one per line, calculate its hash value
-	// and print using "printf ("%lu\t%s\n", hash_value, word);"
-	//----------------------------------------
+	FILE* fd = stdin;
+
+	char received_word[MAX_LINE_LEN]; // array where each word is stored
+
+		while (fgets(received_word, MAX_LINE_LEN, fd) != NULL) {
+			char* word = strtok(received_word, "\n");
+
+			unsigned long hash_value = hashf(word);
+			printf("%lu\t%s\n", hash_value, word);
+	}
 }
 
 int main (int argc, char *argv[]) {
