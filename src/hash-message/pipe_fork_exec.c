@@ -18,9 +18,9 @@ int main (int argc, char *argv[]) {
     usage (argv[0]);
   }
 
-  int pid = fork(); // fork of parent process
   int fd[2]; // array with read and write extremities of pipe
   pipe(fd); // create the communication pipe
+  int pid = fork(); // fork of parent process
   
   switch (pid) {
     case -1: // error
