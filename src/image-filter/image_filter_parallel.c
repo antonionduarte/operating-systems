@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200112L // added this define so that VSCode identifies pthread_barriers 
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
