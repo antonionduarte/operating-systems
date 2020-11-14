@@ -9,11 +9,11 @@
 
 void usage (const char *prog) {
   printf ("Usages: %s [file_path]\n", prog);
-    exit (1);
+  exit (1);
 }
 
 int main (int argc, char *argv[]) {
-  // Check there is one and only one argument
+  // check there is one and only one argument
   if (argc < 1 || argc > 2) {
     usage (argv[0]);
   }
@@ -36,7 +36,6 @@ int main (int argc, char *argv[]) {
       execv("./hash_words", args);
       break;
     default: // parent process (executes split_words)
-      close(1);
       dup(fd[1]);
       close(fd[1]);
       close(fd[0]);
