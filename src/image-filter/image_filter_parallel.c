@@ -5,6 +5,10 @@
 #include <sys/time.h>
 #include <pthread.h>
 
+#ifdef __APPLE__
+	#include "../pthread-barrier/pthread_barrier.c"
+#endif
+
 #include "image_ppm.h"
 
 #define TRUE 1
