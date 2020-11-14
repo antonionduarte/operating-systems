@@ -4,3 +4,4 @@
 !*Makefile
 **/.DS_STORE
 **/Info.plist
+**/*.o

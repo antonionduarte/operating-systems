@@ -36,9 +36,9 @@ void *filter_colors_image(void *id) {
   int i;                    // counts the number of pixels
   unsigned long start = 0;  // TODO // first pixel to be process
   unsigned long end = 0;    // TODO
-#ifdef VERBOSE
-  printf("id = %lu, start = %lu, end= %lu\n", (unsigned long)id, start, end);
-#endif
+	#ifdef VERBOSE
+		printf("id = %lu, start = %lu, end= %lu\n", (unsigned long)id, start, end);
+	#endif
 
   unsigned long local_primary_colors[RGBV] = {0, 0, 0};
 
@@ -54,13 +54,13 @@ void *filter_colors_image(void *id) {
   // TODO
 
   if ((unsigned long)id == 0) {
-#ifdef VERBOSE
-    print_primary_intensity(primary_colors);
-#endif
-// dominant_primary_color = TODO
-#ifdef VERBOSE
-    printf("dominant_primary_color:%d\n", dominant_primary_color);
-#endif
+		#ifdef VERBOSE
+				print_primary_intensity(primary_colors);
+		#endif
+		// dominant_primary_color = TODO
+		#ifdef VERBOSE
+				printf("dominant_primary_color:%d\n", dominant_primary_color);
+		#endif
   }
 
   // TODO
