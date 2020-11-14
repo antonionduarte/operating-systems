@@ -29,7 +29,7 @@ void hash_and_print_words (void) {
 
 	char received_word[MAX_LINE_LEN]; // array where each word is stored
 
-		while (fgets(received_word, MAX_LINE_LEN, fd) != NULL) {
+		while (fgets(received_word, MAX_LINE_LEN, stdin) != NULL) {
 			char* word = strtok(received_word, "\n");
 
 			unsigned long hash_value = hashf(word);
