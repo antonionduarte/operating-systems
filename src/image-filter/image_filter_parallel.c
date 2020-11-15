@@ -103,13 +103,9 @@ void process_image_parallel(int nthreads, unsigned char *input_image,
 	// reservates space for the ids
 	ids = malloc(sizeof(unsigned long) * nthreads);
 
-	// initializes the ids
-	for (int i = 0; i < nthreads; i++) {
-		ids[i] = i; 
-	}
-
 	// create the threads
   for (int i = 0; i < nthreads; i++) {
+		ids[i] = i;
 		pthread_create(&ids[i], NULL, filter_colors_image, (void*) ids[i]);
 	}
 
