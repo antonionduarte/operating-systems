@@ -44,9 +44,9 @@ void *filter_colors_image(void *id) {
 
   // each thread processes its sub-vector
   for (i = start; i < end; i += 3) {
-			local_primary_colors[RED] += image[i]; 
-			local_primary_colors[GREEN] += image[i + 1];
-			local_primary_colors[BLUE] += image[i + 2];
+		local_primary_colors[RED] += image[i]; 
+		local_primary_colors[GREEN] += image[i + 1];
+		local_primary_colors[BLUE] += image[i + 2];
   }
 
   // all threads communicate to calculate the three sums for all pixels in the image
@@ -60,22 +60,20 @@ void *filter_colors_image(void *id) {
 	pthread_barrier_wait(&fillBarrier);
 
   // all threads coordinate themselves to identify the dominant primary colour
-  pthread_mutex_lock(&ex);
-		if ((unsigned long) id == 0) {
-			#ifdef VERBOSE
-				print_primary_intensity(primary_colors);
-			#endif
+	if ((unsigned long) id == 0) {
+		#ifdef VERBOSE
+			print_primary_intensity(primary_colors);
+		#endif
 
-			dominant_primary_color = compare_colors(primary_colors);
-			
-			#ifdef VERBOSE
-				printf("dominant_primary_color:%d\n", dominant_primary_color);
-			#endif
-		}
-	pthread_mutex_unlock(&ex);
+		dominant_primary_color = compare_colors(primary_colors);
+		
+		#ifdef VERBOSE
+			printf("dominant_primary_color:%d\n", dominant_primary_color);
+		#endif
+	}
 
-	// TODO: ask if i should replace mutex locks for a barrier here,
-	// i do think it makes more sense
+	// waits for all threads to get here before continuing
+	pthread_barrier_wait(&fillBarrier);
 
   // all threads filter the non-dominant primary colours in their sub-vectors
 	for (i = start; i < end; i += 3) {
