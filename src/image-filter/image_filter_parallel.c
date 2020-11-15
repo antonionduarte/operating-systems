@@ -74,6 +74,9 @@ void *filter_colors_image(void *id) {
 		}
 	pthread_mutex_unlock(&ex);
 
+	// TODO: ask if i should replace mutex locks for a barrier here,
+	// i do think it makes more sense
+
   // all threads filter the non-dominant primary colours in their sub-vectors
 	for (i = start; i < end; i += 3) {
 		filter_colors(&image[i], dominant_primary_color);
