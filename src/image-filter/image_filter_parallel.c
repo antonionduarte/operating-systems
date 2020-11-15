@@ -101,7 +101,7 @@ void process_image_parallel(int nthreads, unsigned char *input_image,
   pthread_barrier_init(&fillBarrier, NULL, nthreads);
 
 	// reservates space for the ids
-	ids = malloc(sizeof(unsigned long) * nthreads);
+	ids = malloc(sizeof(pthread_t) * nthreads);
 
 	// create the threads
   for (int i = 0; i < nthreads; i++) {
@@ -113,4 +113,7 @@ void process_image_parallel(int nthreads, unsigned char *input_image,
   for (int i = 0; i < nthreads; i++) {
 		pthread_join(ids[i], NULL);
 	}
+
+	// frees the memory of the id array
+	free(ids);
 }
