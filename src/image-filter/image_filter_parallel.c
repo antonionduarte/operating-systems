@@ -35,7 +35,7 @@ pthread_barrier_t fillBarrier;
 void *filter_colors_image(void *id) {
   int i;                    // counts the number of pixels
   unsigned long start = (long) id * lines_per_thread * width * RGBV; // first pixel to be process
-  unsigned long end = (long) (id + 1) * lines_per_thread * width * RGBV; // last pixel to process 
+  unsigned long end = (long) (id + 1) * lines_per_thread * width * RGBV - 1; // last pixel to process 
 	#ifdef VERBOSE
 		printf("id = %lu, start = %lu, end= %lu\n", (unsigned long)id, start, end);
 	#endif
