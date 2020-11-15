@@ -56,6 +56,9 @@ void *filter_colors_image(void *id) {
 		primary_colors[BLUE] += local_primary_colors[BLUE]; 
 	pthread_mutex_unlock(&ex);
 
+	// waits for all threads to get here before continuing
+	pthread_barrier_wait(&fillBarrier);
+
   // all threads coordinate themselves to identify the dominant primary colour
   pthread_mutex_lock(&ex);
 		if ((unsigned long) id == 0) {
