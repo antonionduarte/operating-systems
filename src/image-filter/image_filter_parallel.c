@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #ifdef __APPLE__
-#include "../pthread-barrier/pthread_barrier.c"
+	#include "../pthread-barrier/pthread_barrier.c" // added this so it works on macOS
 #endif
 
 #include "image_ppm.h"
@@ -34,8 +34,8 @@ pthread_barrier_t fillBarrier;
 */
 void *filter_colors_image(void *id) {
   int i;                    // counts the number of pixels
-  unsigned long start = 0;  // TODO // first pixel to be process
-  unsigned long end = 0;    // TODO
+  unsigned long start = (unsigned long) id * lines_per_thread * width * RGBV; // first pixel to be process
+  unsigned long end = (unsigned long) (id + 1) * lines_per_thread * width * RGBV - 1; // last pixel to process 
 	#ifdef VERBOSE
 		printf("id = %lu, start = %lu, end= %lu\n", (unsigned long)id, start, end);
 	#endif
@@ -43,31 +43,37 @@ void *filter_colors_image(void *id) {
   unsigned long local_primary_colors[RGBV] = {0, 0, 0};
 
   // each thread processes its sub-vector
-  for (i = start; i < end; i++) {
-    // TODO
+  for (i = start; i < end; i += 3) {
+			local_primary_colors[RED] += image[i]; 
+			local_primary_colors[GREEN] += image[i + 1];
+			local_primary_colors[BLUE] += image[i + 2];
   }
 
   // all threads communicate to calculate the three sums for all pixels in the image
-  // TODO
+	pthread_mutex_lock(&ex);
+		primary_colors[RED] += local_primary_colors[RED];
+		primary_colors[GREEN] += local_primary_colors[GREEN];
+		primary_colors[BLUE] += local_primary_colors[BLUE]; 
+	pthread_mutex_unlock(&ex);
 
   // all threads coordinate themselves to identify the dominant primary colour
-  // TODO
-
-  if ((unsigned long)id == 0) {
-		#ifdef VERBOSE
+  pthread_mutex_lock(&ex);
+		if ((unsigned long) id == 0) {
+			#ifdef VERBOSE
 				print_primary_intensity(primary_colors);
-		#endif
-		// dominant_primary_color = TODO
-		#ifdef VERBOSE
-				printf("dominant_primary_color:%d\n", dominant_primary_color);
-		#endif
-  }
+			#endif
 
-  // TODO
+			dominant_primary_color = compare_colors(primary_colors);
+			
+			#ifdef VERBOSE
+				printf("dominant_primary_color:%d\n", dominant_primary_color);
+			#endif
+		}
+	pthread_mutex_unlock(&ex);
 
   // all threads filter the non-dominant primary colours in their sub-vectors
-  for (i = start; i < end; i++) {
-    // TODO
+	for (i = start; i < end; i += 3) {
+		filter_colors(&image[i], dominant_primary_color);
   }
 
   return NULL;
@@ -80,7 +86,6 @@ void *filter_colors_image(void *id) {
 void process_image_parallel(int nthreads, unsigned char *input_image,
                             unsigned long num_cols, unsigned long num_lines, void *(*filter)(void *)) {
   pthread_t *ids;  // pointer to the vector with the threads' identifiers
-  int i;
 
   image = input_image;  // the image to be processed
   width = num_cols;     // number of pixels in the yy dimension
@@ -89,11 +94,22 @@ void process_image_parallel(int nthreads, unsigned char *input_image,
   lines_per_thread = height / nthreads;  // number of full lines each thread processes
 
   // barrier init
-  //TODO
+  pthread_barrier_init(&fillBarrier, NULL, nthreads);
 
-  // Thread/worker creation
-  //TODO
+	// reservates space for the ids
+	ids = malloc(sizeof(unsigned long) * nthreads);
+
+	// initializes the ids
+	for (int i = 0; i < nthreads; i++) {
+		ids[i] = i; 
+	}
+
+  for (int i = 0; i < nthreads; i++) {
+		pthread_create(&ids[i], NULL, filter_colors_image, (void*) ids[i]);
+	}
 
   // Waits for all threads to conclude
-  //TODO
+  for (int i = 0; i < nthreads; i++) {
+		pthread_join(ids[i], NULL);
+	}
 }
