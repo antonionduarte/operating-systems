@@ -104,11 +104,12 @@ void process_image_parallel(int nthreads, unsigned char *input_image,
 		ids[i] = i; 
 	}
 
+	// create the threads
   for (int i = 0; i < nthreads; i++) {
 		pthread_create(&ids[i], NULL, filter_colors_image, (void*) ids[i]);
 	}
 
-  // Waits for all threads to conclude
+  // waits for all threads to conclude
   for (int i = 0; i < nthreads; i++) {
 		pthread_join(ids[i], NULL);
 	}
