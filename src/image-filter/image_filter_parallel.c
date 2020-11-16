@@ -43,7 +43,7 @@ void *filter_colors_image(void *id) {
   unsigned long local_primary_colors[RGBV] = {0, 0, 0};
 
   // each thread processes its sub-vector
-  for (i = start; i < end; i += 3) {
+  for (i = start; i <= end; i += 3) {
 		local_primary_colors[RED] += image[i]; 
 		local_primary_colors[GREEN] += image[i + 1];
 		local_primary_colors[BLUE] += image[i + 2];
@@ -76,7 +76,7 @@ void *filter_colors_image(void *id) {
 	pthread_barrier_wait(&fillBarrier);
 
   // all threads filter the non-dominant primary colours in their sub-vectors
-	for (i = start; i < end; i += 3) {
+	for (i = start; i <= end; i += 3) {
 		filter_colors(&image[i], dominant_primary_color);
   }
 
